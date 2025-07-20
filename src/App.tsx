@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, Sun, Moon, Mail, Phone, MapPin, Github, Linkedin, Twitter, ExternalLink, Code2 } from 'lucide-react';
 import perfilImage from './assets/perfil.jpg';
+import code from './assets/code.png';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,7 +21,7 @@ function App() {
     const savedTheme = localStorage.getItem('theme') || 'light';
     const isDark = savedTheme === 'dark';
     setIsDarkMode(isDark);
-    
+
     if (isDark) {
       document.documentElement.classList.add('dark');
     } else {
@@ -62,7 +63,7 @@ function App() {
   const toggleTheme = () => {
     const newTheme = !isDarkMode;
     setIsDarkMode(newTheme);
-    
+
     if (newTheme) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
@@ -101,7 +102,7 @@ function App() {
         if (element) {
           const sectionTop = element.offsetTop - 100;
           const sectionHeight = element.offsetHeight;
-          
+
           if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
             setActiveSection(section);
             break;
@@ -209,11 +210,10 @@ function App() {
                   <button
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
-                    className={`px-3 py-2 text-sm font-medium transition-colors duration-200 ${
-                      activeSection === item.id
-                        ? 'text-red-600 dark:text-red-400'
-                        : 'text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400'
-                    }`}
+                    className={`px-3 py-2 text-sm font-medium transition-colors duration-200 ${activeSection === item.id
+                      ? 'text-red-600 dark:text-red-400'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400'
+                      }`}
                   >
                     {item.label}
                   </button>
@@ -276,7 +276,7 @@ function App() {
         </div>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div 
+          <div
             ref={addToAnimationRef}
             className="text-center lg:text-left opacity-0 translate-y-8 transition-all duration-1000 ease-out"
           >
@@ -293,7 +293,7 @@ function App() {
                 Desenvolvedor Frontend
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
-                Apaixonado por criar aplicações web bonitas, responsivas e centradas no usuário 
+                Apaixonado por criar aplicações web bonitas, responsivas e centradas no usuário
                 com tecnologias modernas e código limpo.
               </p>
             </div>
@@ -314,7 +314,7 @@ function App() {
             </div>
           </div>
 
-          <div 
+          <div
             ref={addToAnimationRef}
             className="flex justify-center lg:justify-end opacity-0 translate-x-8 transition-all duration-1000 ease-out delay-300"
           >
@@ -327,7 +327,7 @@ function App() {
                 </div>
                 <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">portfolio.js</span>
               </div>
-              
+
               <div className="font-mono text-sm space-y-2">
                 <div className="text-purple-600 dark:text-purple-400">
                   <span className="text-blue-600 dark:text-blue-400">const</span>{' '}
@@ -368,18 +368,18 @@ function App() {
       <div className="flex justify-center py-8 dark:bg-[#0d1117]">
         <picture>
           {isDarkMode ? (
-            <source 
-              media="(prefers-color-scheme: dark)" 
+            <source
+              media="(prefers-color-scheme: dark)"
               srcSet="https://raw.githubusercontent.com/eduardavieira-dev/eduardavieira-dev/output/pacman-contribution-graph-dark.svg"
             />
           ) : (
-            <source 
-              media="(prefers-color-scheme: light)" 
+            <source
+              media="(prefers-color-scheme: light)"
               srcSet="https://raw.githubusercontent.com/eduardavieira-dev/eduardavieira-dev/output/pacman-contribution-graph.svg"
             />
           )}
-          <img 
-            alt="pacman contribution graph" 
+          <img
+            alt="pacman contribution graph"
             src={isDarkMode ? "https://raw.githubusercontent.com/eduardavieira-dev/eduardavieira-dev/output/pacman-contribution-graph-dark.svg" : "https://raw.githubusercontent.com/eduardavieira-dev/eduardavieira-dev/output/pacman-contribution-graph.svg"}
             className="max-w-full h-auto"
           />
@@ -389,7 +389,7 @@ function App() {
       {/* About Section */}
       <section id="about" className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div 
+          <div
             ref={addToAnimationRef}
             className="text-center mb-16 opacity-0 translate-y-8 transition-all duration-1000 ease-out"
           >
@@ -402,17 +402,29 @@ function App() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div 
+            <div
               ref={addToAnimationRef}
               className="space-y-6 opacity-0 translate-x-8 transition-all duration-1000 ease-out delay-200"
             >
               <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-                Sou um Desenvolvedor Frontend e Backend (Fullstack) dedicado com paixão por criar experiências digitais excepcionais. 
+                Sou um Desenvolvedor Frontend e Backend (Fullstack) dedicado com paixão por criar experiências digitais excepcionais.
                 Com expertise em tecnologias web modernas e backend (Node.js, Python, MySQL, .NET, n8n), transformo ideias em aplicações funcionais, bonitas, robustas e centradas no usuário.
               </p>
               <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-                Minha abordagem combina excelência técnica com resolução criativa de problemas, garantindo que 
-                cada projeto não apenas atenda aos requisitos, mas supere as expectativas. Mantenho-me atualizado 
+                Sou estudante de Análise e Desenvolvimento de Sistemas pela UNINOVE, atualmente no 4º semestre, com previsão de formatura em junho de 2026. Tenho uma trajetória profissional marcada por responsabilidade, foco em resultados e vontade constante de aprender e evoluir.
+              </p>
+              <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+                Atuei por quase 5 anos na Bridgestone do Brasil (02/2019 a 09/2023), onde comecei como Operador de Produção I e, com dedicação e desempenho, evoluí até Operador III, sempre comprometido com metas, qualidade e trabalho em equipe em um ambiente industrial exigente.
+
+                Após essa experiência, trabalhei na Tenten Imóveis e Incorporadora Ltda. (10/2023 a 06/2025) como Agente de Negócios, realizando atendimento a clientes, divulgação de imóveis, intermediação de negociações e elaboração de contratos. Esse trabalho reforçou minha comunicação, organização e capacidade de negociação.
+
+                Nos últimos anos, decidi seguir meu verdadeiro interesse: a área da tecnologia. Voltei a estudar e venho me dedicando diariamente ao aprendizado.
+
+                Nas minhas horas vagas, gosto de treinar, ouvir músicas e passar tempo com a minha família. Essas atividades me ajudam a manter o equilíbrio e a motivação no dia a dia.
+              </p>
+              <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+                Minha abordagem combina excelência técnica com resolução criativa de problemas, garantindo que
+                cada projeto não apenas atenda aos requisitos, mas supere as expectativas. Mantenho-me atualizado
                 com as últimas tendências e melhores práticas da indústria, tanto no frontend quanto no backend.
               </p>
 
@@ -432,17 +444,26 @@ function App() {
               </div>
             </div>
 
-            <div 
+            <div
               ref={addToAnimationRef}
-              className="flex justify-center opacity-0 scale-95 transition-all duration-1000 ease-out delay-400"
+              className="flex justify-center items-center flex-col gap-14 opacity-0 scale-95 transition-all duration-1000 ease-out delay-400"
             >
               <div className="card">
                 <div className="w-full h-full object-cover rounded-[15px] p-1">
-                <img 
-                  src={perfilImage} 
-                  alt="Robert M. Albok - Desenvolvedor Fullstack" 
-                  className="w-full h-full object-cover rounded-[15px]"
-                />
+                  <img
+                    src={perfilImage}
+                    alt="Robert M. Albok - Desenvolvedor Fullstack"
+                    className="w-full h-full object-cover rounded-[15px]"
+                    />
+                </div>
+              </div>
+              <div className="card">
+                <div className="w-full h-full object-cover rounded-[15px] p-1">
+                    <img
+                      src={code}
+                      alt="Robert M. Albok - Desenvolvedor Fullstack"
+                      className="w-full h-full rounded-[15px]"
+                    />
                 </div>
               </div>
             </div>
@@ -453,7 +474,7 @@ function App() {
       {/* Skills Section */}
       <section id="skills" className="py-20 bg-white dark:bg-gray-900">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div 
+          <div
             ref={addToAnimationRef}
             className="text-center mb-16 opacity-0 translate-y-8 transition-all duration-1000 ease-out"
           >
@@ -467,7 +488,7 @@ function App() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Frontend Skills */}
-            <div 
+            <div
               ref={addToAnimationRef}
               className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 opacity-0 translate-y-8 transition-all duration-1000 ease-out delay-200"
             >
@@ -480,7 +501,7 @@ function App() {
                       <span className="text-sm text-gray-500 dark:text-gray-400">{skill.level}%</span>
                     </div>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                      <div 
+                      <div
                         className="bg-gradient-to-r from-red-600 to-red-800 h-2 rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${skill.level}%` }}
                       ></div>
@@ -491,7 +512,7 @@ function App() {
             </div>
 
             {/* Tech Stack */}
-            <div 
+            <div
               ref={addToAnimationRef}
               className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 opacity-0 translate-y-8 transition-all duration-1000 ease-out delay-400"
             >
@@ -507,7 +528,7 @@ function App() {
             </div>
 
             {/* Design & UX */}
-            <div 
+            <div
               ref={addToAnimationRef}
               className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 opacity-0 translate-y-8 transition-all duration-1000 ease-out delay-600"
             >
@@ -524,7 +545,7 @@ function App() {
                       <span className="text-sm text-gray-500 dark:text-gray-400">{skill.level}%</span>
                     </div>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                      <div 
+                      <div
                         className="bg-gradient-to-r from-red-600 to-red-800 h-2 rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${skill.level}%` }}
                       ></div>
@@ -540,7 +561,7 @@ function App() {
       {/* Projects Section */}
       <section id="projects" className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div 
+          <div
             ref={addToAnimationRef}
             className="text-center mb-16 opacity-0 translate-y-8 transition-all duration-1000 ease-out"
           >
@@ -554,28 +575,28 @@ function App() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {projects.map((project, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 ref={addToAnimationRef}
                 className="bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border border-gray-200 dark:border-gray-700 opacity-0 translate-y-8 transition-all duration-1000 ease-out"
                 style={{ transitionDelay: `${(index + 1) * 200}ms` }}
               >
                 <div className="relative overflow-hidden h-48">
-                  <img 
-                    src={project.image} 
+                  <img
+                    src={project.image}
                     alt={project.title}
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <div className="flex space-x-4">
-                      <button 
+                      <button
                         onClick={() => handleProjectAction(project, 'demo')}
                         className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center space-x-2"
                       >
                         <ExternalLink className="w-4 h-4" />
                         <span>Demo</span>
                       </button>
-                      <button 
+                      <button
                         onClick={() => handleProjectAction(project, 'code')}
                         className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors duration-200 flex items-center space-x-2"
                       >
@@ -585,7 +606,7 @@ function App() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="p-6">
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">{project.title}</h3>
                   <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">{project.description}</p>
@@ -606,7 +627,7 @@ function App() {
       {/* Contact Section */}
       <section id="contact" className="py-20 bg-white dark:bg-gray-900">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div 
+          <div
             ref={addToAnimationRef}
             className="text-center mb-10 opacity-0 translate-y-8 transition-all duration-1000 ease-out"
           >
@@ -620,44 +641,44 @@ function App() {
 
           {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-12"> */}
           <div className="flex flex-col items-center justify-center w-full">
-            <div 
+            <div
               ref={addToAnimationRef}
               className="opacity-0 translate-x-8 transition-all duration-1000 ease-out delay-200 w-[80%]"
             >
               <div className="flex flex-col items-center justify-center w-full">
                 <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">Vamos nos Conectar</h3>
-              <div className="flex space-x-4 my-8">
-                  <a 
-                    href="https://www.linkedin.com/in/robert-albok-bab8ab2b9" 
-                    target="_blank" 
+                <div className="flex space-x-4 my-8">
+                  <a
+                    href="https://www.linkedin.com/in/robert-albok-bab8ab2b9"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2"
-                    >
+                  >
                     <Linkedin className="w-4 h-4" />
                     <span>LinkedIn</span>
                   </a>
-                  <a 
-                    href="https://github.com/RobertAlbok" 
-                    target="_blank" 
+                  <a
+                    href="https://github.com/RobertAlbok"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors duration-200 flex items-center space-x-2"
-                    >
+                  >
                     <Github className="w-4 h-4" />
                     <span>GitHub</span>
                   </a>
-                  <a 
-                    href="https://wa.me/5511959942147" 
-                    target="_blank" 
+                  <a
+                    href="https://wa.me/5511959942147"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-colors duration-200 flex items-center space-x-2"
-                    >
+                  >
                     <Phone className="w-4 h-4" />
                     <span>WhatsApp</span>
                   </a>
                 </div>
-                    </div>
+              </div>
               <p className="text-lg text-red-600 dark:text-red-400 mb-8 leading-relaxed">
-                Estou sempre aberto para discutir novas oportunidades, projetos interessantes 
+                Estou sempre aberto para discutir novas oportunidades, projetos interessantes
                 ou possíveis colaborações. Sinta-se à vontade para entrar em contato!
               </p>
 
@@ -693,7 +714,7 @@ function App() {
                 </div>
               </div> */}
 
-                              
+
             </div>
 
             {/* <form 
@@ -765,7 +786,7 @@ function App() {
       </section>
 
       {/* Footer */}
-      <footer 
+      <footer
         ref={addToAnimationRef}
         className="bg-gray-50 dark:bg-gray-800 py-8 border-t border-gray-200 dark:border-gray-700 opacity-0 translate-y-8 transition-all duration-1000 ease-out"
       >
@@ -786,32 +807,32 @@ function App() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-800 rounded-xl max-w-md w-full p-6 shadow-2xl">
             <div className="text-center">
-                             <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                 {projectModal.type === 'demo' ? (
-                   <ExternalLink className="w-8 h-8 text-red-600 dark:text-red-400" />
-                 ) : (
-                   <Code2 className="w-8 h-8 text-red-600 dark:text-red-400" />
-                 )}
-               </div>
-              
+              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                {projectModal.type === 'demo' ? (
+                  <ExternalLink className="w-8 h-8 text-red-600 dark:text-red-400" />
+                ) : (
+                  <Code2 className="w-8 h-8 text-red-600 dark:text-red-400" />
+                )}
+              </div>
+
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 {projectModal.project?.title}
               </h3>
-              
+
               <p className="text-gray-600 dark:text-gray-400 mb-6">
-                {projectModal.type === 'demo' 
+                {projectModal.type === 'demo'
                   ? "Este projeto está em desenvolvimento ativo. Em breve estará disponível para demonstração!"
                   : "O código fonte deste projeto será disponibilizado em breve no GitHub. Estou trabalhando na documentação e organização do repositório."
                 }
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-3">
-                                 <button
-                   onClick={scrollToContact}
-                   className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
-                 >
-                   Solicitar Demo
-                 </button>
+                <button
+                  onClick={scrollToContact}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                >
+                  Solicitar Demo
+                </button>
                 <button
                   onClick={closeProjectModal}
                   className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
