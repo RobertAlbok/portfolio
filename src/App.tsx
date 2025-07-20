@@ -365,7 +365,7 @@ function App() {
         </div>
       </section>
 
-      <div className="flex justify-center py-8 dark:bg-[#0d1117]">
+      <div className="flex justify-center lg:py-8 dark:bg-[#0d1117]">
         <picture>
           {isDarkMode ? (
             <source
