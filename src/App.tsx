@@ -1,10 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, Sun, Moon, Mail, Phone, MapPin, Github, Linkedin, Twitter, ExternalLink, Code2 } from 'lucide-react';
+import perfilImage from './assets/perfil.jpg';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [projectModal, setProjectModal] = useState<{ isOpen: boolean; project: any; type: 'demo' | 'code' }>({
+    isOpen: false,
+    project: null,
+    type: 'demo'
+  });
+
+
+  // Refs for animation elements
+  const animatedElements = useRef<HTMLElement[]>([]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -18,6 +28,37 @@ function App() {
     }
   }, []);
 
+  // Intersection Observer for scroll animations
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+        }
+      });
+    }, observerOptions);
+
+    // Observe all animated elements
+    animatedElements.current.forEach((el) => {
+      if (el) {
+        observer.observe(el);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const addToAnimationRef = (el: HTMLElement | null) => {
+    if (el && !animatedElements.current.includes(el)) {
+      animatedElements.current.push(el);
+    }
+  };
+
   const toggleTheme = () => {
     const newTheme = !isDarkMode;
     setIsDarkMode(newTheme);
@@ -25,9 +66,11 @@ function App() {
     if (newTheme) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
+      console.log('Dark mode enabled');
     } else {
       document.documentElement.classList.remove('dark');
       localStorage.setItem('theme', 'light');
+      console.log('Light mode enabled');
     }
   };
 
@@ -72,22 +115,27 @@ function App() {
   }, []);
 
   const skills = [
-    { name: 'HTML5', level: 95 },
-    { name: 'CSS3/SCSS', level: 90 },
-    { name: 'JavaScript (ES6+)', level: 88 },
-    { name: 'React.js', level: 85 },
-    { name: 'TypeScript', level: 80 }
+    { name: 'HTML5', level: 70 },
+    { name: 'CSS3/SCSS', level: 40 },
+    { name: 'JavaScript (ES6+)', level: 35 },
+    { name: 'React.js', level: 20 },
+    { name: 'TypeScript', level: 20 },
+    { name: 'Backend (Node.js, Python, .NET, MySQL, n8n)', level: 15 }
   ];
 
   const techStack = [
     { icon: '⚛️', name: 'React' },
-    { icon: '🅰️', name: 'Angular' },
-    { icon: '💚', name: 'Vue.js' },
     { icon: '🎨', name: 'Tailwind' },
     { icon: '⚡', name: 'Vite' },
     { icon: '📦', name: 'Webpack' },
     { icon: '🔧', name: 'Git' },
-    { icon: '🐙', name: 'GitHub' }
+    { icon: '🐙', name: 'GitHub' },
+    { icon: '🐬', name: 'MySQL' },
+    { icon: '🤖', name: 'n8n' },
+    { icon: '🐍', name: 'Python' },
+    { icon: '💻', name: 'C#' },
+    { icon: '🌐', name: '.NET' },
+    { icon: '🟩', name: 'Node.js' },
   ];
 
   const projects = [
@@ -95,25 +143,25 @@ function App() {
       title: 'Plataforma E-commerce',
       description: 'Uma plataforma de e-commerce moderna construída com React e sistemas de pagamento integrados.',
       image: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=800',
-      tech: ['React', 'Redux', 'Stripe', 'CSS3']
+      tech: ['React', 'Redux', 'Stripe', 'Node.js', 'MySQL']
     },
     {
       title: 'App de Gerenciamento de Tarefas',
-      description: 'Uma aplicação colaborativa de gerenciamento de tarefas com atualizações em tempo real.',
+      description: 'Uma aplicação colaborativa de gerenciamento de tarefas com atualizações em tempo real e automações.',
       image: 'https://images.pexels.com/photos/577585/pexels-photo-577585.jpeg?auto=compress&cs=tinysrgb&w=800',
-      tech: ['Vue.js', 'Firebase', 'Vuetify', 'PWA']
+      tech: ['Next.js', 'Firebase', 'n8n', 'Node.js']
     },
     {
       title: 'Dashboard Meteorológico',
-      description: 'Um dashboard interativo com previsões baseadas em localização e visualização de dados.',
+      description: 'Um dashboard interativo com previsões baseadas em localização, visualização de dados e backend robusto.',
       image: 'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=800',
-      tech: ['JavaScript', 'Chart.js', 'API', 'SCSS']
+      tech: ['JavaScript', 'Chart.js', 'API', 'Python', 'MySQL']
     },
     {
       title: 'Site Corporativo',
-      description: 'Um site corporativo profissional com design moderno e performance otimizada.',
+      description: 'Um site corporativo profissional com design moderno, performance otimizada e integração backend.',
       image: 'https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=800',
-      tech: ['Angular', 'TypeScript', 'Material UI', 'SEO']
+      tech: ['TypeScript', 'Material UI', '.NET', 'C#']
     }
   ];
 
@@ -121,6 +169,19 @@ function App() {
     e.preventDefault();
     // Handle form submission here
     alert('Mensagem enviada com sucesso! Entrarei em contato em breve.');
+  };
+
+  const handleProjectAction = (project: any, type: 'demo' | 'code') => {
+    setProjectModal({ isOpen: true, project, type });
+  };
+
+  const closeProjectModal = () => {
+    setProjectModal({ isOpen: false, project: null, type: 'demo' });
+  };
+
+  const scrollToContact = () => {
+    closeProjectModal();
+    scrollToSection('contact');
   };
 
   return (
@@ -131,7 +192,7 @@ function App() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <span className="text-xl font-bold text-gray-900 dark:text-white">
-                Robert<span className="text-blue-600">.</span>
+                Robert<span className="text-red-600">.</span>
               </span>
             </div>
 
@@ -150,8 +211,8 @@ function App() {
                     onClick={() => scrollToSection(item.id)}
                     className={`px-3 py-2 text-sm font-medium transition-colors duration-200 ${
                       activeSection === item.id
-                        ? 'text-blue-600 dark:text-blue-400'
-                        : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                        ? 'text-red-600 dark:text-red-400'
+                        : 'text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400'
                     }`}
                   >
                     {item.label}
@@ -215,13 +276,16 @@ function App() {
         </div>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="text-center lg:text-left">
+          <div 
+            ref={addToAnimationRef}
+            className="text-center lg:text-left opacity-0 translate-y-8 transition-all duration-1000 ease-out"
+          >
             <div className="space-y-4">
               <p className="text-lg text-gray-600 dark:text-gray-400 font-medium">
                 Olá, eu sou
               </p>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold">
-                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
                   Robert M. Albok
                 </span>
               </h1>
@@ -237,20 +301,23 @@ function App() {
             <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center lg:justify-start">
               <button
                 onClick={() => scrollToSection('projects')}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
+                className="px-8 py-3 bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
               >
                 Ver Meus Trabalhos
               </button>
               <button
                 onClick={() => scrollToSection('contact')}
-                className="px-8 py-3 border-2 border-blue-600 text-blue-600 dark:text-blue-400 font-semibold rounded-lg hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white transform hover:-translate-y-1 transition-all duration-300"
+                className="px-8 py-3 border-2 border-red-600 text-red-600 dark:text-red-400 font-semibold rounded-lg hover:bg-red-600 hover:text-white dark:hover:bg-red-600 dark:hover:text-white transform hover:-translate-y-1 transition-all duration-300"
               >
                 Entre em Contato
               </button>
             </div>
           </div>
 
-          <div className="flex justify-center lg:justify-end">
+          <div 
+            ref={addToAnimationRef}
+            className="flex justify-center lg:justify-end opacity-0 translate-x-8 transition-all duration-1000 ease-out delay-300"
+          >
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 max-w-md w-full border border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex space-x-2">
@@ -294,15 +361,39 @@ function App() {
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-6 border-r-2 border-b-2 border-blue-600 transform rotate-45"></div>
+          <div className="w-6 h-6 border-r-2 border-b-2 border-red-600 transform rotate-45"></div>
         </div>
       </section>
+
+      <div className="flex justify-center py-8 dark:bg-[#0d1117]">
+        <picture>
+          {isDarkMode ? (
+            <source 
+              media="(prefers-color-scheme: dark)" 
+              srcSet="https://raw.githubusercontent.com/eduardavieira-dev/eduardavieira-dev/output/pacman-contribution-graph-dark.svg"
+            />
+          ) : (
+            <source 
+              media="(prefers-color-scheme: light)" 
+              srcSet="https://raw.githubusercontent.com/eduardavieira-dev/eduardavieira-dev/output/pacman-contribution-graph.svg"
+            />
+          )}
+          <img 
+            alt="pacman contribution graph" 
+            src={isDarkMode ? "https://raw.githubusercontent.com/eduardavieira-dev/eduardavieira-dev/output/pacman-contribution-graph-dark.svg" : "https://raw.githubusercontent.com/eduardavieira-dev/eduardavieira-dev/output/pacman-contribution-graph.svg"}
+            className="max-w-full h-auto"
+          />
+        </picture>
+      </div>
 
       {/* About Section */}
       <section id="about" className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+          <div 
+            ref={addToAnimationRef}
+            className="text-center mb-16 opacity-0 translate-y-8 transition-all duration-1000 ease-out"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent mb-4">
               Sobre Mim
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-400">
@@ -311,38 +402,48 @@ function App() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
+            <div 
+              ref={addToAnimationRef}
+              className="space-y-6 opacity-0 translate-x-8 transition-all duration-1000 ease-out delay-200"
+            >
               <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-                Sou um Desenvolvedor Frontend dedicado com paixão por criar experiências digitais excepcionais. 
-                Com expertise em tecnologias web modernas, transformo ideias em aplicações funcionais, bonitas e 
-                centradas no usuário.
+                Sou um Desenvolvedor Frontend e Backend (Fullstack) dedicado com paixão por criar experiências digitais excepcionais. 
+                Com expertise em tecnologias web modernas e backend (Node.js, Python, MySQL, .NET, n8n), transformo ideias em aplicações funcionais, bonitas, robustas e centradas no usuário.
               </p>
               <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
                 Minha abordagem combina excelência técnica com resolução criativa de problemas, garantindo que 
                 cada projeto não apenas atenda aos requisitos, mas supere as expectativas. Mantenho-me atualizado 
-                com as últimas tendências e melhores práticas da indústria.
+                com as últimas tendências e melhores práticas da indústria, tanto no frontend quanto no backend.
               </p>
 
               <div className="grid grid-cols-3 gap-8 mt-8">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">2+</div>
+                  <div className="text-3xl font-bold text-red-600 dark:text-red-400 mb-2">2+</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Projetos Concluídos</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">1</div>
+                  <div className="text-3xl font-bold text-red-600 dark:text-red-400 mb-2">1</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Anos de Experiência</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">2+</div>
+                  <div className="text-3xl font-bold text-red-600 dark:text-red-400 mb-2">2+</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Clientes Satisfeitos</div>
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-center">
-              <div className="w-80 h-96 bg-gray-200 dark:bg-gray-700 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center">
-                <div className="text-6xl mb-4">👨‍💻</div>
-                <p className="text-gray-500 dark:text-gray-400 font-medium">Foto Profissional</p>
+            <div 
+              ref={addToAnimationRef}
+              className="flex justify-center opacity-0 scale-95 transition-all duration-1000 ease-out delay-400"
+            >
+              <div className="card">
+                <div className="w-full h-full object-cover rounded-[15px] p-1">
+                <img 
+                  src={perfilImage} 
+                  alt="Robert M. Albok - Desenvolvedor Fullstack" 
+                  className="w-full h-full object-cover rounded-[15px]"
+                />
+                </div>
               </div>
             </div>
           </div>
@@ -352,8 +453,11 @@ function App() {
       {/* Skills Section */}
       <section id="skills" className="py-20 bg-white dark:bg-gray-900">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+          <div 
+            ref={addToAnimationRef}
+            className="text-center mb-16 opacity-0 translate-y-8 transition-all duration-1000 ease-out"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent mb-4">
               Habilidades & Tecnologias
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-400">
@@ -363,8 +467,11 @@ function App() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Frontend Skills */}
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700">
-              <h3 className="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-6 text-center">Frontend</h3>
+            <div 
+              ref={addToAnimationRef}
+              className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 opacity-0 translate-y-8 transition-all duration-1000 ease-out delay-200"
+            >
+              <h3 className="text-xl font-semibold text-red-600 dark:text-red-400 mb-6 text-center">Frontend</h3>
               <div className="space-y-4">
                 {skills.map((skill, index) => (
                   <div key={index}>
@@ -374,7 +481,7 @@ function App() {
                     </div>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                       <div 
-                        className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all duration-1000 ease-out"
+                        className="bg-gradient-to-r from-red-600 to-red-800 h-2 rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${skill.level}%` }}
                       ></div>
                     </div>
@@ -384,8 +491,11 @@ function App() {
             </div>
 
             {/* Tech Stack */}
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700">
-              <h3 className="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-6 text-center">Ferramentas & Frameworks</h3>
+            <div 
+              ref={addToAnimationRef}
+              className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 opacity-0 translate-y-8 transition-all duration-1000 ease-out delay-400"
+            >
+              <h3 className="text-xl font-semibold text-red-600 dark:text-red-400 mb-6 text-center">Ferramentas & Frameworks</h3>
               <div className="grid grid-cols-2 gap-4">
                 {techStack.map((tech, index) => (
                   <div key={index} className="bg-white dark:bg-gray-900 rounded-lg p-4 text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
@@ -397,13 +507,16 @@ function App() {
             </div>
 
             {/* Design & UX */}
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700">
-              <h3 className="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-6 text-center">Design & UX</h3>
+            <div 
+              ref={addToAnimationRef}
+              className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 opacity-0 translate-y-8 transition-all duration-1000 ease-out delay-600"
+            >
+              <h3 className="text-xl font-semibold text-red-600 dark:text-red-400 mb-6 text-center">Design & UX</h3>
               <div className="space-y-4">
                 {[
-                  { name: 'UI/UX Design', level: 85 },
-                  { name: 'Design Responsivo', level: 95 },
-                  { name: 'Figma/Adobe XD', level: 75 }
+                  { name: 'UI/UX Design', level: 60 },
+                  { name: 'Design Responsivo', level: 40 },
+                  { name: 'Figma/Adobe XD', level: 35 }
                 ].map((skill, index) => (
                   <div key={index}>
                     <div className="flex justify-between mb-2">
@@ -412,7 +525,7 @@ function App() {
                     </div>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                       <div 
-                        className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all duration-1000 ease-out"
+                        className="bg-gradient-to-r from-red-600 to-red-800 h-2 rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${skill.level}%` }}
                       ></div>
                     </div>
@@ -427,8 +540,11 @@ function App() {
       {/* Projects Section */}
       <section id="projects" className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+          <div 
+            ref={addToAnimationRef}
+            className="text-center mb-16 opacity-0 translate-y-8 transition-all duration-1000 ease-out"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent mb-4">
               Projetos em Destaque
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-400">
@@ -438,7 +554,12 @@ function App() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {projects.map((project, index) => (
-              <div key={index} className="bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border border-gray-200 dark:border-gray-700">
+              <div 
+                key={index} 
+                ref={addToAnimationRef}
+                className="bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border border-gray-200 dark:border-gray-700 opacity-0 translate-y-8 transition-all duration-1000 ease-out"
+                style={{ transitionDelay: `${(index + 1) * 200}ms` }}
+              >
                 <div className="relative overflow-hidden h-48">
                   <img 
                     src={project.image} 
@@ -447,11 +568,17 @@ function App() {
                   />
                   <div className="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <div className="flex space-x-4">
-                      <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2">
+                      <button 
+                        onClick={() => handleProjectAction(project, 'demo')}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center space-x-2"
+                      >
                         <ExternalLink className="w-4 h-4" />
                         <span>Demo</span>
                       </button>
-                      <button className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors duration-200 flex items-center space-x-2">
+                      <button 
+                        onClick={() => handleProjectAction(project, 'code')}
+                        className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors duration-200 flex items-center space-x-2"
+                      >
                         <Code2 className="w-4 h-4" />
                         <span>Código</span>
                       </button>
@@ -479,8 +606,11 @@ function App() {
       {/* Contact Section */}
       <section id="contact" className="py-20 bg-white dark:bg-gray-900">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+          <div 
+            ref={addToAnimationRef}
+            className="text-center mb-10 opacity-0 translate-y-8 transition-all duration-1000 ease-out"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent mb-4">
               Entre em Contato
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-400">
@@ -488,18 +618,53 @@ function App() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div>
-              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Vamos nos Conectar</h3>
-              <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+          {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-12"> */}
+          <div className="flex flex-col items-center justify-center w-full">
+            <div 
+              ref={addToAnimationRef}
+              className="opacity-0 translate-x-8 transition-all duration-1000 ease-out delay-200 w-[80%]"
+            >
+              <div className="flex flex-col items-center justify-center w-full">
+                <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">Vamos nos Conectar</h3>
+              <div className="flex space-x-4 my-8">
+                  <a 
+                    href="https://www.linkedin.com/in/robert-albok-bab8ab2b9" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2"
+                    >
+                    <Linkedin className="w-4 h-4" />
+                    <span>LinkedIn</span>
+                  </a>
+                  <a 
+                    href="https://github.com/RobertAlbok" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors duration-200 flex items-center space-x-2"
+                    >
+                    <Github className="w-4 h-4" />
+                    <span>GitHub</span>
+                  </a>
+                  <a 
+                    href="https://wa.me/5511959942147" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-colors duration-200 flex items-center space-x-2"
+                    >
+                    <Phone className="w-4 h-4" />
+                    <span>WhatsApp</span>
+                  </a>
+                </div>
+                    </div>
+              <p className="text-lg text-red-600 dark:text-red-400 mb-8 leading-relaxed">
                 Estou sempre aberto para discutir novas oportunidades, projetos interessantes 
                 ou possíveis colaborações. Sinta-se à vontade para entrar em contato!
               </p>
 
-              <div className="space-y-6">
+              {/* <div className="space-y-6">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                    <Mail className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                  <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                    <Mail className="w-6 h-6 text-red-600 dark:text-red-400" />
                   </div>
                   <div>
                     <div className="text-sm text-gray-500 dark:text-gray-400">Email</div>
@@ -526,25 +691,16 @@ function App() {
                     <div className="font-medium text-gray-900 dark:text-white">Disponível para Trabalho Remoto</div>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
-              <div className="flex space-x-4 mt-8">
-                <a href="#" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2">
-                  <Linkedin className="w-4 h-4" />
-                  <span>LinkedIn</span>
-                </a>
-                <a href="#" className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors duration-200 flex items-center space-x-2">
-                  <Github className="w-4 h-4" />
-                  <span>GitHub</span>
-                </a>
-                <a href="#" className="px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-500 transition-colors duration-200 flex items-center space-x-2">
-                  <Twitter className="w-4 h-4" />
-                  <span>Twitter</span>
-                </a>
-              </div>
+                              
             </div>
 
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* <form 
+              ref={addToAnimationRef}
+              className="space-y-6 opacity-0 translate-x-8 transition-all duration-1000 ease-out delay-400"
+              onSubmit={handleSubmit}
+            >
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Nome
@@ -553,7 +709,7 @@ function App() {
                   type="text"
                   id="name"
                   name="name"
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
                   required
                 />
               </div>
@@ -566,7 +722,7 @@ function App() {
                   type="email"
                   id="email"
                   name="email"
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
                   required
                 />
               </div>
@@ -579,7 +735,7 @@ function App() {
                   type="text"
                   id="subject"
                   name="subject"
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
                   required
                 />
               </div>
@@ -592,24 +748,27 @@ function App() {
                   id="message"
                   name="message"
                   rows={6}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 resize-none"
                   required
                 ></textarea>
               </div>
 
               <button
                 type="submit"
-                className="w-full px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
+                className="w-full px-8 py-3 bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
               >
                 Enviar Mensagem
               </button>
-            </form>
+            </form> */}
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-50 dark:bg-gray-800 py-8 border-t border-gray-200 dark:border-gray-700">
+      <footer 
+        ref={addToAnimationRef}
+        className="bg-gray-50 dark:bg-gray-800 py-8 border-t border-gray-200 dark:border-gray-700 opacity-0 translate-y-8 transition-all duration-1000 ease-out"
+      >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-gray-600 dark:text-gray-400 text-sm">
@@ -621,6 +780,49 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* Project Modal */}
+      {projectModal.isOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl max-w-md w-full p-6 shadow-2xl">
+            <div className="text-center">
+                             <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                 {projectModal.type === 'demo' ? (
+                   <ExternalLink className="w-8 h-8 text-red-600 dark:text-red-400" />
+                 ) : (
+                   <Code2 className="w-8 h-8 text-red-600 dark:text-red-400" />
+                 )}
+               </div>
+              
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                {projectModal.project?.title}
+              </h3>
+              
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                {projectModal.type === 'demo' 
+                  ? "Este projeto está em desenvolvimento ativo. Em breve estará disponível para demonstração!"
+                  : "O código fonte deste projeto será disponibilizado em breve no GitHub. Estou trabalhando na documentação e organização do repositório."
+                }
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-3">
+                                 <button
+                   onClick={scrollToContact}
+                   className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                 >
+                   Solicitar Demo
+                 </button>
+                <button
+                  onClick={closeProjectModal}
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                >
+                  Fechar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
