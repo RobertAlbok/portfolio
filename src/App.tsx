@@ -325,15 +325,15 @@ function App() {
 
               <div className="grid grid-cols-3 gap-8 mt-8">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">50+</div>
+                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">2+</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Projetos Concluídos</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">3+</div>
+                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">1</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Anos de Experiência</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">100+</div>
+                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">2+</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Clientes Satisfeitos</div>
                 </div>
               </div>
